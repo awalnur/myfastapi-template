@@ -10,7 +10,7 @@ from src.auth.security import create_access_token, create_refresh_token, set_red
 from src.user.model import RefreshToken
 
 
-def create_credentials(db: Session, redis_con: Redis, user) -> Token:
+def create_credentials(db: Session, redis_con: Redis, user, device='Defaults') -> Token:
     role = [Role.name for Role in user.roles]
     access_token = create_access_token(
         data={"sub": str(user.user_id), "scopes": role},
@@ -20,11 +20,11 @@ def create_credentials(db: Session, redis_con: Redis, user) -> Token:
         data={"sub": str(user.user_id)}
     )
     refresh_token_save = RefreshToken(refresh_token=refresh_token, user_id=user.user_id,
-                                      expires_at=datetime.utcnow() + timedelta(days=settings.REFRESH_TOKEN_EXPIRE_DAYS))
+                                      expires_at=datetime.utcnow() + timedelta(days=settings.REFRESH_TOKEN_EXPIRE_DAYS),
+                                      device=device)
     try:
-        db.query(RefreshToken).filter(RefreshToken.user_id==user.user_id).count()
+        db.merge(refresh_token_save)
 
-        db.add(refresh_token_save)
         db.commit()
     except Exception as e:
         raise HTTPException(status_code=500, detail=e)

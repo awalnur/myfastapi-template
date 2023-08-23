@@ -1,3 +1,5 @@
+from typing import Literal
+
 from pydantic import BaseModel
 
 
@@ -20,3 +22,9 @@ class UserLogin(BaseModel):
 class TokenData(BaseModel):
     user_id: str | None = None
     scopes: list[str] = []
+
+
+class LogoutModel(BaseModel):
+    device: Literal["all", "single"] = "single"
+    access_token: str
+    refresh_token: str

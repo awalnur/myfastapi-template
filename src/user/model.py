@@ -45,12 +45,12 @@ class Users(Base):
 class RefreshToken(Base):
     __tablename__ = 'tbl_refresh_token'
 
-    refresh_token = Column(String(255), primary_key=True)
+    refresh_token = Column(String(255))
     expires_at = Column(DateTime, nullable=False, default=datetime.datetime.utcnow() + datetime.timedelta(days=settings.REFRESH_TOKEN_EXPIRE_DAYS))
-    device = Column(String(255), nullable=True)
+    device = Column(String(255), nullable=True, primary_key=True)
 
     # User relationship
-    user_id = Column(UUID(as_uuid=True), ForeignKey('tbl_users.user_id'), nullable=False)
+    user_id = Column(UUID(as_uuid=True), ForeignKey('tbl_users.user_id'), nullable=False, primary_key=True)
     user = relationship('Users', back_populates='refresh_tokens')
 
 
