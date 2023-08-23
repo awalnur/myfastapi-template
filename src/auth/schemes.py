@@ -1,0 +1,22 @@
+from pydantic import BaseModel
+
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str | None = "Bearer"
+    refresh_token: str
+
+
+class AccessToken(BaseModel):
+    access_token: str
+    token_type: str
+
+
+class UserLogin(BaseModel):
+    username: str
+    password: str
+
+
+class TokenData(BaseModel):
+    user_id: str | None = None
+    scopes: list[str] = []

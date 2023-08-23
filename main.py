@@ -1,11 +1,21 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
+from fastapi.exceptions import RequestValidationError
+from starlette.requests import Request
+from starlette.responses import JSONResponse
 
-app = FastAPI()
+from config.database import engine
+from src.app import app
+from src.user import model
+
+model.Base.metadata.create_all(bind=engine)
+
+app = app()
 
 
-@app.get("/")
+@app.get("/test-health-check", include_in_schema=False)
 async def root():
-    return {"message": "Hello World"}
+    raise HTTPException(status_code=400, detail='sda')
+    # return {"message": "Hello World"}
 
 
 @app.get("/hello/{name}")
