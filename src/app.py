@@ -33,7 +33,7 @@ def app():
         return app.openapi_schema
 
     config_path = Path(os.path.join('log_config.json'))
-    print(config_path)
+    # print(config_path)
     # logger = CustomizeLogger.make_logger(config_path)
 
     app = FastAPI(

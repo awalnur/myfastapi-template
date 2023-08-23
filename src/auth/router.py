@@ -91,8 +91,7 @@ async def logout(db: Annotated[Session, Depends(get_db)], data: LogoutModel,
 
 
 @auth_router.get("/users/me/", response_model=User)
-async def read_users_me(db: Annotated[Session, Depends(get_db)],
-                        current_user: Annotated[User, Depends(get_current_active_user)]):
+async def read_users_me(current_user: Annotated[User, Depends(get_current_active_user)]):
     return current_user
 
 
@@ -101,15 +100,3 @@ async def read_own_items(
         current_user: Annotated[User, Security(get_current_active_user, scopes=["items"])]
 ):
     return [{"item_id": "Foo", "owner": current_user.username}]
-
-
-@auth_router.get("/status")
-async def read_system_status(db: Annotated[Session, Depends(get_db)],
-                             current_user: Annotated[User, Depends(get_current_user)]):
-    return {"status": "ok"}
-
-
-@auth_router.get("/test")
-async def read_redis_status(rcon: Annotated[Redis, Depends(get_redis)]):
-    return {"s": rcon.get("userid_r_9eb1122b-118c-4e0d-af4f-85016e1a614d"),
-            "ss": rcon.get("userid_a_9eb1122b-118c-4e0d-af4f-85016e1a614d")}

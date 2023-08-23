@@ -1,5 +1,3 @@
-from typing import Literal
-
 from pydantic import BaseModel
 
 
@@ -25,6 +23,6 @@ class TokenData(BaseModel):
 
 
 class LogoutModel(BaseModel):
-    device: Literal["all", "single"] = "single"
+    device: str | None = "single"
     access_token: str
     refresh_token: str
